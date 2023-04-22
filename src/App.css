@@ -1,5 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  --red-color: hsl(0, 100%, 74%);
+  --green-color: hsl(154, 59%, 51%);
+  --blue-color: hsl(248, 32%, 49%);
+  --dark-blue-color: hsl(249, 10%, 26%);
+  --grayish-blue: hsl(246, 25%, 77%);
+}
+
+.app {
+  background: url(../public/bg-intro-desktop.png) repeat, var(--red-color);
+  height: 100%;
 }
