@@ -1,17 +1,76 @@
+import { useEffect, useState } from 'react';
 import './App.css';
 
-function Validate(element, predicate) {
-  debugger;
-  console.log(element, predicate);
-}
+function CustomInput({ id, type, placeholder, checking, predicates, setValid }) {
+  const [value, setValue] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-function ValidateAll() {
-  debugger;
-  const allFields = document.querySelectorAll(".signup-form input");
-  
+  const [inFocus, setInFocus] = useState(false);
+  const [lastErrorMessage, setLastErrorMessage] = useState('');
+
+  function makeChange(newValue) {
+    setValue(newValue);
+
+    for (let index in predicates) {
+      const predicate = predicates[index];
+      if (!predicate.predicate(newValue)) {
+        setErrorMessage(predicate.text);
+        setValid(false);
+        return;
+      }
+    }
+
+    setValid(true);
+    setErrorMessage("");
+  }
+
+  useEffect(() => {
+    makeChange(value);
+  }, [checking]);
+
+  function onFocus() {
+    setInFocus(true);
+    checking && setLastErrorMessage(errorMessage);
+  }
+
+  function onBlur() {
+    setInFocus(false);
+    checking && setLastErrorMessage("");
+  }
+
+  return (
+    <>
+      <input 
+        placeholder={placeholder} 
+        id={id} 
+        type={type}
+        value={value} 
+        onChange={(e) => makeChange(e.target.value)}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+      {checking && errorMessage !== "" ? 
+        <label htmlFor={id}>{errorMessage}</label> :
+        inFocus && lastErrorMessage !== "" && <label htmlFor={id}>{lastErrorMessage}</label>
+      }
+    </>
+  )
 }
 
 function App() {
+  const [checking, setChecking] = useState(false);
+  const [validFirstName, setValidFirstName] = useState(false);
+  const [validLastName, setValidLastName] = useState(false);
+  const [validEmail, setValidEmail] = useState(false);
+  const [validPassword, setValidPassword] = useState(false);
+
+  function claimHandler() {
+    setChecking(true);
+    if (validFirstName && validLastName && validEmail && validPassword) {
+      console.log("form submit");
+    }
+  }
+
   return (
     <div className="app">
       <div className="left-side">
@@ -28,11 +87,42 @@ function App() {
           </div>
         </div>
         <form className="signup-form white-bg bottom-shadow">
-          <input placeholder="First Name" id="first-name"></input>
-          <input placeholder="Last Name" id="last-name"></input>
-          <input placeholder="Email Address" id="email-address"></input>
-          <input placeholder="Password" type="password" id="password"></input>
-          <div className="claim-free-trial green-bg white clickable" onClick={ValidateAll}>
+          <CustomInput 
+            placeholder="First Name"
+            id="first-name"
+            type="text"
+            predicates={[{predicate: (value) => value.length > 3, text: "First Name cannot be empty"}]}
+            checking={checking}
+            setValid={setValidFirstName}
+          />
+          <CustomInput
+            placeholder="Last Name" 
+            id="last-name"
+            type="text"
+            predicates={[{predicate: (value) => value.length > 3, text: "Last Name cannot be empty"}]}
+            checking={checking}
+            setValid={setValidLastName}
+          />
+          <CustomInput 
+            placeholder="Email Address" 
+            id="email-address"
+            type="text"
+            predicates={[{predicate: (value) => value.length > 3, text: "Looks like this is not an email"}]}
+            checking={checking}
+            setValid={setValidEmail}
+          />
+          <CustomInput 
+            placeholder="Password"
+            id="password"
+            type="password"
+            predicates={[{predicate: (value) => value.length > 3, text: "Password cannot be empty"}]}
+            checking={checking}
+            setValid={setValidPassword}
+          />
+          <div 
+            className="claim-free-trial green-bg white clickable"
+            onClick={claimHandler}
+          >
             <span className="non-selectable">CLAIM YOUR FREE TRIAL</span>
           </div>
           <div className="terms-and-services text-center-x">
