@@ -85,10 +85,6 @@ html, body, #root {
   padding: 32px;
 }
 
-.signup-form label {
-  display: none;
-}
-
 .signup-form input {
   border: 1px solid var(--grey-color);
   font-family: 'Poppins', sans-serif;
