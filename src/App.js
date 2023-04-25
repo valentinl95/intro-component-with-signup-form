@@ -162,7 +162,7 @@ function App() {
             <span className="non-selectable">CLAIM YOUR FREE TRIAL</span>
           </div>
           <div className="terms-and-services">
-            <span className="grayish-blue">By clicking the button, you are agreeing to our</span>
+            <span className="grayish-blue">By clicking the button, you are agreeing to our </span>
             <span className="bold red clickable">Terms and Services</span>
           </div>
         </form>
